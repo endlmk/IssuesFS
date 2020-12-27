@@ -6,6 +6,8 @@ module CLI =
     open System
     open CommandLine
     
+    let defaultCount = 4
+
     type Options = {
         [<Value(0, MetaName = "user", Required = true)>] user : string;
         [<Value(1, MetaName = "project", Required = true)>] project : string;
@@ -22,9 +24,16 @@ module CLI =
         | :? Parsed<Options> as parsed -> Opts(parsed.Value) 
         | _ -> Help
 
+    let execute args =
+        match args with
+        | Opts({ user = u; project = p; count = c; }) -> () (*IssuesFS.GithubIssues.fetch(u, p)*) 
+        | Help -> (System.Console.WriteLine($"usage: issues <user> <project> [ count | {defaultCount} ]"); exit(0);)
+
     [<EntryPoint>]
     let main argv =
-        printfn "Hello World from F#!"
+        argv 
+        |> parseArgs
+        |> execute
         0 // return an integer exit code
 
 
