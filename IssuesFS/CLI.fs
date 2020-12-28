@@ -5,7 +5,8 @@ module CLI =
 
     open System
     open CommandLine
-
+    open FSharp.Data
+    open JsonExtensions
     
     let defaultCount = 4
 
@@ -25,16 +26,36 @@ module CLI =
         | :? Parsed<Options> as parsed -> Opts(parsed.Value) 
         | _ -> Help
 
+    let decodeResponse (result : Result<JsonValue, JsonValue>) =
+        match result with 
+        | Ok(body) -> body.AsArray()
+        | Error(error) -> (System.Console.WriteLine($"Error fetching from Github: {error?message}"); exit(0);)
+
+    let sortIntoDescendingOrder (issues : JsonValue[]) =
+        issues
+        |> Seq.sortWith (fun i1 i2 -> if i1?created_at >= i2?created_at then -1 else 1)
+    
+    let last count list =
+        list
+        |> Seq.take count
+        |> Seq.rev
+        
     let execute args =
         match args with
-        | Opts({ user = u; project = p; count = c; }) -> ISsuesFS.GithubIssues.fetch u p 
-        | Help -> (System.Console.WriteLine($"usage: issues <user> <project> [ count | {defaultCount} ]"); exit(0);)
+        | Opts({ user = u; project = p; count = c; }) 
+            -> ISsuesFS.GithubIssues.fetch u p
+                |> decodeResponse
+                |> sortIntoDescendingOrder
+                |> last c
+        | Help 
+            -> (System.Console.WriteLine($"usage: issues <user> <project> [ count | {defaultCount} ]"); exit(0);)
 
     [<EntryPoint>]
     let main argv =
         argv 
         |> parseArgs
         |> execute
+        |> Seq.iter (printfn "%A")
         0 // return an integer exit code
 
 

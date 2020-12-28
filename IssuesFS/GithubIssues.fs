@@ -12,7 +12,7 @@ module GithubIssues =
     let parseResponseBody (responseBody : HttpResponseBody) = 
         match responseBody with
         | Text(body) -> JsonValue.Parse(body)
-        | Binary(_) ->  (System.Console.WriteLine($"Unexpected response body type: Binary"); exit(0);)
+        | Binary(_) ->  (System.Console.WriteLine("Unexpected response body type: Binary"); exit(0);)
     
     let handleResponse (response : HttpResponse) = 
         let responseJson = response.Body |> parseResponseBody
@@ -20,14 +20,8 @@ module GithubIssues =
         | 200 -> Ok (responseJson)
         | _ -> Error (responseJson)
 
-    let decodeResponse (result : Result<JsonValue, JsonValue>) =
-        match result with 
-        | Ok(body) -> body
-        | Error(error) -> (System.Console.WriteLine($"Error fetching from Github: {error?message}"); exit(0);)
-
     let fetch user project =
         let request url = Http.Request(url, headers = userAgent, silentHttpErrors = true)
         issuesUrl user project
         |> request
         |> handleResponse
-        |> decodeResponse
