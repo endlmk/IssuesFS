@@ -5,6 +5,7 @@ module CLI =
 
     open System
     open CommandLine
+
     
     let defaultCount = 4
 
@@ -26,7 +27,7 @@ module CLI =
 
     let execute args =
         match args with
-        | Opts({ user = u; project = p; count = c; }) -> () (*IssuesFS.GithubIssues.fetch(u, p)*) 
+        | Opts({ user = u; project = p; count = c; }) -> ISsuesFS.GithubIssues.fetch u p 
         | Help -> (System.Console.WriteLine($"usage: issues <user> <project> [ count | {defaultCount} ]"); exit(0);)
 
     [<EntryPoint>]
