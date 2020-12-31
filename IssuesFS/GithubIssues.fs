@@ -6,7 +6,7 @@ module GithubIssues =
     open FSharp.Data
     open FSharp.Data.JsonExtensions
 
-    let userAgent = [ "User-agent", "Elixir dave@pragprog.com" ]
+    let userAgent = [ "User-agent", "IssuesFS" ]
 
     let issuesUrl user project =
         $"https://api.github.com/repos/{user}/{project}/issues"
