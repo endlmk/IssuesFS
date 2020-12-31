@@ -1,4 +1,4 @@
-module IssuesFS.Test
+module CLI.Test
 
 open NUnit.Framework
 open FsUnit

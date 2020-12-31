@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <Compile Include="CLITest.fs" />
+    <Compile Include="TableFormatterTest.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

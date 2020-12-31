@@ -1,4 +1,6 @@
-﻿namespace ISsuesFS
+﻿
+namespace IssuesFS
+
 module GithubIssues =
     open System
     open FSharp.Data

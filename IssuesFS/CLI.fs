@@ -7,7 +7,7 @@ module CLI =
     open CommandLine
     open FSharp.Data
     open JsonExtensions
-    
+
     let defaultCount = 4
 
     type Options = {
@@ -39,14 +39,16 @@ module CLI =
         list
         |> Seq.take count
         |> Seq.rev
+        |> Seq.toArray
         
     let execute args =
         match args with
         | Opts({ user = u; project = p; count = c; }) 
-            -> ISsuesFS.GithubIssues.fetch u p
+            -> IssuesFS.GithubIssues.fetch u p
                 |> decodeResponse
                 |> sortIntoDescendingOrder
                 |> last c
+                |> fun issues -> IssuesFS.TableFormatter.printTableForColumns issues (seq{ "number"; "created_at"; "title"; })
         | Help 
             -> (System.Console.WriteLine($"usage: issues <user> <project> [ count | {defaultCount} ]"); exit(0);)
 
@@ -55,7 +57,7 @@ module CLI =
         argv 
         |> parseArgs
         |> execute
-        |> Seq.iter (printfn "%A")
+        |> printfn "%A"
         0 // return an integer exit code
 
 
