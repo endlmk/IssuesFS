@@ -57,7 +57,7 @@ module CLI =
         argv 
         |> parseArgs
         |> execute
-        |> printfn "%A"
+        |> printfn "%s"
         0 // return an integer exit code
 
 

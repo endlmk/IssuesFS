@@ -32,6 +32,6 @@ module TableFormatter =
 
     let printTableForColumns (rows : JsonValue[]) headers =
         let dataByColumns = splitIntoColumns rows headers
-        let columnWidths = widthOf dataByColumns
+        let columnWidths = Seq.zip (widthOf dataByColumns) (headers |> Seq.map String.length) |> Seq.map (fun (d, h) -> max d h)
 
         (putsOneLineInColumns headers columnWidths) + (separeator columnWidths) + (putsInColumns rows headers columnWidths) 
